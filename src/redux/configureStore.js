@@ -8,7 +8,7 @@ import rootReducer from './modules/rootReducer';
 const persistConfig = {
   key: 'todolist-v2.0',
   storage,
-  whitelist: ['todos', 'inProgress', 'done'],
+  whitelist: ['todos', 'inProgress', 'dones'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
