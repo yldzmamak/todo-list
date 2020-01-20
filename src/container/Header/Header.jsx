@@ -8,7 +8,11 @@ const { Header: AntHeader } = Layout;
 const Header = ({ ...otherProps }) => {
   return (
     <AntHeader className="App-header" {...otherProps}>
-      <img src={logo} className="App-logo" alt="logo" />
+      <img
+        src="https://kafein.fra1.digitaloceanspaces.com/kafein-web/kafein_logo.png"
+        className="App-logo"
+        alt="logo"
+      />
     </AntHeader>
   );
 };
