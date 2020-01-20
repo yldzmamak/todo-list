@@ -2,6 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 import { BrowserRouter as RouterProvider } from 'react-router-dom';
+
+import { LocaleProvider } from 'antd';
+import tr_TR from 'antd/lib/locale-provider/tr_TR';
+
 import { PersistGate } from 'redux-persist/integration/react';
 
 import App from './App';
@@ -15,9 +19,11 @@ const Init = () => {
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={undefined} persistor={persistor}>
-        <RouterProvider basename="/todo">
-          <App />
-        </RouterProvider>
+        <LocaleProvider locale={tr_TR}>
+          <RouterProvider basename="/todo">
+            <App />
+          </RouterProvider>
+        </LocaleProvider>
       </PersistGate>
     </ReduxProvider>
   );

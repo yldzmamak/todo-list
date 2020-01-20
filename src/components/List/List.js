@@ -4,32 +4,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConstIcon from '../../constants/IconType';
 
 import { Row, Col, Table, Tooltip, Divider, Dropdown, Menu } from 'antd';
-
-import { inProgressAction, todosAction } from '../../redux/modules';
 import SaveToDoModal from '../AddToDo/components/SaveToDoModal';
 
 import { sortParamsWithId } from '../../utils/utils';
 
-const Todos = () => {
+const List = ({ screenProps }) => {
   const [isVisibleSaveToDoModal, setIsVisibleSaveToDoModal] = useState(false);
   const [willUpdateItem, setWillUpdateItem] = useState(false);
-  const todos = useSelector(({ todos }) => todos.todos).sort(sortParamsWithId);
+
+  const {
+    title,
+    getItemsFromStore,
+    dropDownItems,
+    moveToFirstComponent,
+    moveToSecondComponent,
+    dispatchAddItemToStore,
+  } = screenProps;
+
+  const data = useSelector(getItemsFromStore).sort(sortParamsWithId);
   const dispatch = useDispatch();
 
-  const moveToInProgress = inProgress => {
-    dispatch(inProgressAction.addInProgress(inProgress));
-    dispatch(todosAction.deleteTodo(inProgress));
+  const moveToInFirstComponent = item => {
+    dispatch(moveToFirstComponent.dispatchAddItemToStore(item));
+    dispatch(moveToFirstComponent.dispatchDeleteItemToStore(item));
   };
 
-  const deleteItem = todo => {
-    dispatch(todosAction.deleteTodo(todo));
+  const moveToInSecondComponent = item => {
+    dispatch(moveToSecondComponent.dispatchAddItemToStore(item));
+    dispatch(moveToSecondComponent.dispatchDeleteItemToStore(item));
+  };
+
+  const deleteItem = item => {
+    dispatch(moveToFirstComponent.dispatchDeleteItemToStore(item));
   };
 
   const columns = [
     {
-      title: 'Yapılacak',
+      title: title,
       key: 'text',
       dataIndex: 'text',
+      ellipsis: true,
       render: data => <span>{data}</span>,
     },
     {
@@ -37,7 +51,7 @@ const Todos = () => {
       dataIndex: 'operation',
       align: 'center',
       width: 100,
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <>
             <Dropdown
@@ -45,11 +59,13 @@ const Todos = () => {
               overlay={
                 <Menu>
                   <Menu.Item>
-                    <a onClick={() => moveToInProgress(record)}>{ConstIcon.arrowIcon} Yapılıyor</a>
+                    <a onClick={() => moveToInFirstComponent(record)}>
+                      {ConstIcon.arrowIcon} {dropDownItems[0]}
+                    </a>
                   </Menu.Item>
                   <Menu.Item>
-                    <a onClick={() => moveToInProgress(record)}>
-                      {ConstIcon.doubleArrowIcon} Yapıldı
+                    <a onClick={() => moveToInSecondComponent(record)}>
+                      {ConstIcon.doubleArrowIcon} {dropDownItems[1]}
                     </a>
                   </Menu.Item>
                   <Menu.Item>
@@ -88,12 +104,13 @@ const Todos = () => {
           isVisible={isVisibleSaveToDoModal}
           setVisible={setIsVisibleSaveToDoModal}
           willUpdateItem={willUpdateItem}
+          dispatchAddItemToStore={dispatchAddItemToStore}
         />
         <Table
           size="small"
           className="gx-table-responsive"
           columns={columns}
-          dataSource={todos ? todos : []}
+          dataSource={data ? data : []}
           pagination={{ hideOnSinglePage: true }}
           style={{ width: '100%' }}
         ></Table>
@@ -102,4 +119,4 @@ const Todos = () => {
   );
 };
 
-export default Todos;
+export default List;

@@ -1,23 +1,19 @@
 import React from 'react';
 
 import { Row, Col } from 'antd';
-import { AddToDo, Todos, InProgress } from '../../components';
+import { AddToDo, List } from '../../components';
+import { homePageData } from './useGenerateList';
 
 const Home = () => {
   return (
     <>
+      <AddToDo />
       <Row>
-        <Col xl={12} xs={8}>
-          <AddToDo />
-        </Col>
-      </Row>
-      <Row>
-        <Col xl={12} xs={8}>
-          <Todos />
-        </Col>
-        <Col xl={12} xs={8}>
-          <InProgress />
-        </Col>
+        {homePageData.map(item => (
+          <Col xs={24} md={8} style={{ padding: 10 }}>
+            <List screenProps={item} />
+          </Col>
+        ))}
       </Row>
     </>
   );

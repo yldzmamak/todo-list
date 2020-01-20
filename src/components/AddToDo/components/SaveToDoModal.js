@@ -6,13 +6,13 @@ import { Form } from 'antd';
 import { Modal, Input, Button } from '../../../components';
 
 import { Rules } from '../../../enums';
-import { todosAction } from '../../../redux/modules';
 
 const SaveToDoModal = props => {
   const {
     isVisible,
     setVisible,
     willUpdateItem,
+    dispatchAddItemToStore,
     form: { getFieldDecorator },
   } = props;
 
@@ -23,11 +23,10 @@ const SaveToDoModal = props => {
     event.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
-        let id;
-        willUpdateItem ? (id = willUpdateItem.id) : (id = new Date().getTime());
+        let id = willUpdateItem ? willUpdateItem.id : new Date().getTime();
 
         const todo = { id, text: values.todo };
-        dispatch(todosAction.addTodo(todo));
+        dispatch(dispatchAddItemToStore(todo));
         setVisible(false);
       }
     });
